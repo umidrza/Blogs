@@ -1,6 +1,7 @@
 const _ = require("lodash")
 
 const dummy = (blogs) => {
+    blogs.forEach(blog => blog)
     return 1;
 }
 
@@ -35,7 +36,7 @@ const mostLikes = (blogs) => {
             likes: _.sumBy(list, "likes")
         }))
         .maxBy("likes");
-};
+}
 
 module.exports = {
     dummy,

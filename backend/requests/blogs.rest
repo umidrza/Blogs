@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3003/api/blogs
+@blogId = 69b80236f244445199a03173
+
+###
+GET {{baseUrl}}
+
+###
+GET {{baseUrl}}/{{blogId}}
+
+###
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+    "title": "new Blog",
+    "author": "Blog Author",
+    "url": "Blog url",
+    "likes": 10,
+}
+
+###
+PUT {{baseUrl}}/{{blogId}}
+Content-Type: application/json
+
+{
+    "title": "updated Blog",
+    "author": "Blog Author",
+    "url": "Blog url",
+    "likes": 13,
+}
+###
+DELETE {{baseUrl}}/{{blogId}}

@@ -12,11 +12,15 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
 
+  if (password.length < 6){
+    return response.status(400).json({ error: 'password must be at least 6 characters long' })
+  }
+
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const user = new User({
-    username,
+    username: username.toLowerCase(),
     name,
     passwordHash,
   })

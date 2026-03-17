@@ -49,7 +49,7 @@ describe('when there are initially some blogs saved', () => {
   })
 
   describe('when adding a new blog', () => {
-    test.only('blog count increases by one and added blog can be found', async () => {
+    test('blog count increases by one and added blog can be found', async () => {
       const newBlog = {
         title: 'Testing Blog API',
         author: 'Mark Markkanen',

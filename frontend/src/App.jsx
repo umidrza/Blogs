@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import loginService from "./services/login";
 import blogService from "./services/blogs";
 import Blogs from './components/Blogs'
@@ -6,20 +6,32 @@ import LoginForm from './components/LoginForm'
 import Logout from './components/LogoutForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [notification, setNotification] = useState({ message: "", type: "" });
 
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('loggedBlogappUser')
+    const saved = localStorage.getItem('loggedBlogUser')
     return saved ? JSON.parse(saved) : null
   })
 
+  const blogFormRef = useRef()
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then(blogs => {
+      const sortedBlogs = blogs.sort((b1, b2) => b2.likes - b1.likes);
+      setBlogs(sortedBlogs);
+    })
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      blogService.setToken(user.token)
+    }
   }, [])
 
   const handleLogin = async (credentials) => {
@@ -51,6 +63,7 @@ const App = () => {
       const returnedBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(returnedBlog));
 
+      blogFormRef.current.toggleVisibility()
       showNotification(
         `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
       );
@@ -66,6 +79,7 @@ const App = () => {
       setNotification(null);
     }, 5000);
   };
+
 
   if (user === null) {
     return (
@@ -86,8 +100,11 @@ const App = () => {
         type={notification?.type}
       />
 
-      <BlogForm createBlog={addBlog} />
-      <Blogs blogs={blogs} />
+      <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
+        <BlogForm createBlog={addBlog} />
+      </Togglable>
+
+      <Blogs blogs={blogs} setBlogs={setBlogs} />
       <Logout user={user} handleLogout={handleLogout} />
     </div>
   );

@@ -1,5 +1,6 @@
 
-const Logout = ({user, handleLogout}) => {
+const LogoutForm = ({ user, handleLogout }) => {
+
   return (
     <div>
       <p>{user.name} logged in</p>
@@ -8,4 +9,4 @@ const Logout = ({user, handleLogout}) => {
   )
 }
 
-export default Logout
+export default LogoutForm

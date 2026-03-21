@@ -1,18 +1,6 @@
 import Blog from "./Blog"
 
-const Blogs = ({ blogs, setBlogs }) => {
-  const updateBlogInState = (updatedBlog) => {
-    setBlogs(blogs.map(blog =>
-      blog.id === updatedBlog.id
-        ? { ...updatedBlog, user: blog.user }
-        : blog
-    ))
-  }
-
-  const deleteBlogInState = (blogId) => {
-    setBlogs(blogs.filter(blog => blog.id !== blogId))
-  }
-
+const Blogs = ({ blogs, updateBlogInState, deleteBlogInState }) => {
   return (
     <div>
       <h2>Blogs</h2>

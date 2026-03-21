@@ -1,11 +1,10 @@
 
-const LogoutForm = ({ user, handleLogout }) => {
+const LogoutForm = ({ handleLogout }) => {
 
   return (
-    <div>
-      <p>{user.name} logged in</p>
+    <>
       <button onClick={handleLogout}>logout</button>
-    </div>
+    </>
   )
 }
 

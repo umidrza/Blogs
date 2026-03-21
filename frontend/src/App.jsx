@@ -2,11 +2,19 @@ import { useState, useEffect, useRef } from 'react'
 import loginService from "./services/login";
 import blogService from "./services/blogs";
 import Blogs from './components/Blogs'
+import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Logout from './components/LogoutForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable';
+import Home from './components/Home'
+
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link,
+  useMatch
+} from 'react-router-dom'
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -80,32 +88,73 @@ const App = () => {
     }, 5000);
   };
 
-
-  if (user === null) {
-    return (
-      <div>
-        <Notification
-          message={notification?.message}
-          type={notification?.type}
-        />
-        <LoginForm handleLogin={handleLogin} />
-      </div>
-    );
+  const updateBlogInState = (updatedBlog) => {
+    setBlogs(blogs.map(blog =>
+      blog.id === updatedBlog.id
+        ? { ...updatedBlog, user: blog.user }
+        : blog
+    ))
   }
+
+  const deleteBlogInState = (blogId) => {
+    setBlogs(blogs.filter(blog => blog.id !== blogId))
+  }
+
+  const padding = {
+    padding: 5
+  }
+
+  const match = useMatch('/blogs/:id')
+  const blog = match
+    ? blogs.find(blog => blog.id === match.params.id)
+    : null
 
   return (
     <div>
+      <div>
+        <Link style={padding} to="/">home</Link>
+        <Link style={padding} to="/blogs">blogs</Link>
+
+        {user
+          ? <em>{user.name} <Logout handleLogout={handleLogout} /></em>
+          : <Link style={padding} to="/login">login</Link>
+        }
+      </div>
+
       <Notification
         message={notification?.message}
         type={notification?.type}
       />
 
-      <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
-      </Togglable>
+      <Routes>
+        <Route path="/" element={<Home />} />
 
-      <Blogs blogs={blogs} setBlogs={setBlogs} />
-      <Logout user={user} handleLogout={handleLogout} />
+        <Route path="/blogs" element={(
+          <>
+            <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
+              <BlogForm createBlog={addBlog} />
+            </Togglable>
+            <Blogs blogs={blogs}
+              updateBlogInState={updateBlogInState}
+              deleteBlogInState={deleteBlogInState} />
+          </>
+        )} />
+
+        <Route path="/blogs/:id" element={
+          blog
+            ? <Blog
+              blog={blog}
+              updateBlogInState={updateBlogInState}
+              deleteBlogInState={deleteBlogInState}
+            />
+            : <div>loading...</div>
+        } />
+
+        <Route path="/login" element={
+          <LoginForm handleLogin={handleLogin} />
+        } />
+
+      </Routes>
     </div>
   );
 }

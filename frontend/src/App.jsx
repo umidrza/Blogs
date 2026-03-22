@@ -11,9 +11,8 @@ import Togglable from './components/Togglable';
 import Home from './components/Home'
 
 import {
-  BrowserRouter as Router,
   Routes, Route, Link,
-  useMatch
+  useNavigate
 } from 'react-router-dom'
 
 const App = () => {
@@ -26,6 +25,7 @@ const App = () => {
   })
 
   const blogFormRef = useRef()
+  const navigate = useNavigate()
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -64,6 +64,7 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogUser");
     setUser(null);
     showNotification(`Logout ${user.name}`);
+    navigate('/login')
   };
 
   const addBlog = async (blogObject) => {
@@ -75,6 +76,7 @@ const App = () => {
       showNotification(
         `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
       );
+      navigate(`blogs/${returnedBlog.id}`)
     } catch {
       showNotification("failed to add blog", "error");
     }
@@ -88,26 +90,9 @@ const App = () => {
     }, 5000);
   };
 
-  const updateBlogInState = (updatedBlog) => {
-    setBlogs(blogs.map(blog =>
-      blog.id === updatedBlog.id
-        ? { ...updatedBlog, user: blog.user }
-        : blog
-    ))
-  }
-
-  const deleteBlogInState = (blogId) => {
-    setBlogs(blogs.filter(blog => blog.id !== blogId))
-  }
-
   const padding = {
     padding: 5
   }
-
-  const match = useMatch('/blogs/:id')
-  const blog = match
-    ? blogs.find(blog => blog.id === match.params.id)
-    : null
 
   return (
     <div>
@@ -134,20 +119,15 @@ const App = () => {
             <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
               <BlogForm createBlog={addBlog} />
             </Togglable>
-            <Blogs blogs={blogs}
-              updateBlogInState={updateBlogInState}
-              deleteBlogInState={deleteBlogInState} />
+            <Blogs blogs={blogs}/>
           </>
         )} />
 
         <Route path="/blogs/:id" element={
-          blog
-            ? <Blog
-              blog={blog}
-              updateBlogInState={updateBlogInState}
-              deleteBlogInState={deleteBlogInState}
+            <Blog
+              blogs={blogs}
+              setBlogs={setBlogs}
             />
-            : <div>loading...</div>
         } />
 
         <Route path="/login" element={

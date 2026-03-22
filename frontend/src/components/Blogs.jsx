@@ -1,14 +1,13 @@
-import Blog from "./Blog"
+import { Link } from "react-router-dom"
 
-const Blogs = ({ blogs, updateBlogInState, deleteBlogInState }) => {
+const Blogs = ({ blogs }) => {
   return (
     <div>
       <h2>Blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id}
-          blog={blog}
-          updateBlogInState={updateBlogInState}
-          deleteBlogInState={deleteBlogInState} />
+      <Link key={blog.id} to={`/blogs/${blog.id}`}>
+        <div>{blog.title} by {blog.author}</div>
+      </Link>
       )}
     </div>
   )

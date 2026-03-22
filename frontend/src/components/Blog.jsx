@@ -1,9 +1,12 @@
 import { useState } from "react"
 import blogService from '../services/blogs'
-import { Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
-const Blog = ({ blog, updateBlogInState, deleteBlogInState }) => {
+const Blog = ({ blogs, setBlogs }) => {
   const [visible, setVisible] = useState(false)
+  const { id } = useParams();
+  const navigate = useNavigate()
+  const blog = blogs.find(blog => blog.id === id)
 
   const blogStyle = {
     paddingTop: 10,
@@ -32,13 +35,30 @@ const Blog = ({ blog, updateBlogInState, deleteBlogInState }) => {
     if (confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       await blogService.remove(blog.id);
       deleteBlogInState(blog.id);
+      navigate('/blogs')
     }
+  }
+
+  const updateBlogInState = (updatedBlog) => {
+    setBlogs(blogs.map(blog =>
+      blog.id === updatedBlog.id
+        ? { ...updatedBlog, user: blog.user }
+        : blog
+    ))
+  }
+
+  const deleteBlogInState = (blogId) => {
+    setBlogs(blogs.filter(blog => blog.id !== blogId))
+  }
+
+  if (!blog) {
+    return <div>Loading...</div>
   }
 
   return (
     <div className="blog" style={blogStyle}>
       <div>
-        <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
+        {blog.title} by {blog.author}
         <button onClick={toggleVisibility}>
           {visible ? 'hide' : 'view'}
         </button>

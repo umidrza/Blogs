@@ -82,42 +82,53 @@ const App = () => {
   }
 
   return (
-    <div>
-      <div>
-        <Link style={padding} to="/">home</Link>
-        <Link style={padding} to="/blogs">blogs</Link>
+    <div className="container mt-4">
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4 rounded shadow-sm p-3">
+        <div className="container-fluid d-flex justify-content-between">
+          <div className="d-flex gap-3">
+            <Link className="nav-link" to="/">Home</Link>
+            <Link className="nav-link" to="/blogs">Blogs</Link>
+          </div>
 
-        {user
-          ? <em>{user.name} <Logout handleLogout={handleLogout} /></em>
-          : <Link style={padding} to="/login">login</Link>
-        }
-      </div>
+          <div>
+            {user ? (
+              <span className="navbar-text">
+                <em>
+                  {user.name} <Logout handleLogout={handleLogout} />
+                </em>
+              </span>
+            ) : (
+              <Link className="nav-link" to="/login">Login</Link>
+            )}
+          </div>
+        </div>
+      </nav>
 
+      {/* Notification */}
       <Notification
         message={notification?.message}
         type={notification?.type}
       />
 
+      {/* Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route path="/blogs" element={(
-          <>
-            <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
-              <BlogForm createBlog={addBlog} />
-            </Togglable>
-            <Blogs />
-          </>
-        )} />
+        <Route
+          path="/blogs"
+          element={
+            <>
+              <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
+                <BlogForm createBlog={addBlog} />
+              </Togglable>
+              <Blogs />
+            </>
+          }
+        />
 
-        <Route path="/blogs/:id" element={
-          <Blog/>
-        } />
-
-        <Route path="/login" element={
-          <LoginForm handleLogin={handleLogin} />
-        } />
-
+        <Route path="/blogs/:id" element={<Blog />} />
+        <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
       </Routes>
     </div>
   );

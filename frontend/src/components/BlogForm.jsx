@@ -16,24 +16,52 @@ const BlogForm = ({ createBlog }) => {
   };
 
   return (
-    <div>
-      <h3>Create new Blog</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title">Title</label>
-          <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)}/>
+    <div className="container mt-4">
+      <h3 className="mb-3">Create New Blog</h3>
+
+      <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
+        <div className="mb-3">
+          <label htmlFor="title" className="form-label">
+            Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            className="form-control"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
-        <div>
-          <label htmlFor="author">Author</label>
-          <input type="text" id="author" value={author} onChange={(e) => setAuthor(e.target.value)}/>
+
+        <div className="mb-3">
+          <label htmlFor="author" className="form-label">
+            Author
+          </label>
+          <input
+            type="text"
+            id="author"
+            className="form-control"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
         </div>
-        <div>
-          <label htmlFor="url">Url</label>
-          <input type="text" id="url" value={url} onChange={(e) => setUrl(e.target.value)}/>
+
+        <div className="mb-3">
+          <label htmlFor="url" className="form-label">
+            URL
+          </label>
+          <input
+            type="text"
+            id="url"
+            className="form-control"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
         </div>
-        <div>
-          <button type="submit">Create Blog</button>
-        </div>
+
+        <button type="submit" className="btn btn-success">
+          Create Blog
+        </button>
       </form>
     </div>
   )

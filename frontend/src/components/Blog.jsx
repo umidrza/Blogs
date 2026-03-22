@@ -10,14 +10,6 @@ const Blog = () => {
 
   const blog = blogs.find(blog => blog.id === id)
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   const toggleVisibility = () => {
     setVisible(!visible)
   }
@@ -44,27 +36,53 @@ const Blog = () => {
   }
 
   return (
-    <div className="blog" style={blogStyle}>
-      <div>
-        {blog.title} by {blog.author}
-        <button onClick={toggleVisibility}>
-          {visible ? 'hide' : 'view'}
-        </button>
-      </div>
-
-      {visible && (
-        <div>
-          <div>{blog.url}</div>
+    <div className="blog card mb-3">
+      <div className="card-body">
+        <div className="d-flex justify-content-between align-items-center">
           <div>
-            {blog.likes} likes
-            <button onClick={handleLike}>like</button>
+            <strong>{blog.title}</strong> by {blog.author}
           </div>
-          <div>{blog.user.name}</div>
-          <div>
-            <button onClick={handleDelete}>remove</button>
-          </div>
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={toggleVisibility}
+          >
+            {visible ? 'Hide' : 'View'}
+          </button>
         </div>
-      )}
+
+        {visible && (
+          <div className="mt-3">
+            <div className="mb-2">
+              <a href={blog.url} target="_blank" rel="noreferrer">
+                {blog.url}
+              </a>
+            </div>
+
+            <div className="mb-2 d-flex align-items-center gap-2">
+              <span>{blog.likes} likes</span>
+              <button
+                className="btn btn-outline-success btn-sm"
+                onClick={handleLike}
+              >
+                Like
+              </button>
+            </div>
+
+            <div className="mb-2 text-muted">
+              Added by {blog.user.name}
+            </div>
+
+            <div>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={handleDelete}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

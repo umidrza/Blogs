@@ -3,7 +3,12 @@ const LogoutForm = ({ handleLogout }) => {
 
   return (
     <>
-      <button onClick={handleLogout}>logout</button>
+      <button
+        className="btn btn-outline-danger btn-sm"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
     </>
   )
 }

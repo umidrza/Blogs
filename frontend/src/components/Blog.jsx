@@ -1,11 +1,13 @@
 import { useState } from "react"
-import blogService from '../services/blogs'
+import useResource from '../hooks/useResource'
 import { useParams, useNavigate } from 'react-router-dom'
 
-const Blog = ({ blogs, setBlogs }) => {
-  const [visible, setVisible] = useState(false)
+const Blog = () => {
+  const [blogs, blogService] = useResource('/api/blogs');
+  const [visible, setVisible] = useState(false);
   const { id } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const blog = blogs.find(blog => blog.id === id)
 
   const blogStyle = {
@@ -27,28 +29,14 @@ const Blog = ({ blogs, setBlogs }) => {
       user: blog.user.id
     }
 
-    const returnedBlog = await blogService.update(blog.id, updatedBlog)
-    updateBlogInState(returnedBlog)
+    await blogService.update(blog.id, updatedBlog);
   }
 
   const handleDelete = async () => {
     if (confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       await blogService.remove(blog.id);
-      deleteBlogInState(blog.id);
       navigate('/blogs')
     }
-  }
-
-  const updateBlogInState = (updatedBlog) => {
-    setBlogs(blogs.map(blog =>
-      blog.id === updatedBlog.id
-        ? { ...updatedBlog, user: blog.user }
-        : blog
-    ))
-  }
-
-  const deleteBlogInState = (blogId) => {
-    setBlogs(blogs.filter(blog => blog.id !== blogId))
   }
 
   if (!blog) {

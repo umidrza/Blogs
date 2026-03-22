@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import loginService from "./services/login";
-import blogService from "./services/blogs";
+import useResource from './hooks/useResource'
+
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
@@ -16,29 +17,18 @@ import {
 } from 'react-router-dom'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, blogService] = useResource('/api/blogs');
   const [notification, setNotification] = useState({ message: "", type: "" });
-
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('loggedBlogUser')
-    return saved ? JSON.parse(saved) : null
-  })
+  const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
   const navigate = useNavigate()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      const sortedBlogs = blogs.sort((b1, b2) => b2.likes - b1.likes);
-      setBlogs(sortedBlogs);
-    })
-  }, [])
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
+    const loggedUserJSON = localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      blogService.setToken(user.token)
+      setUser(user)
     }
   }, [])
 
@@ -50,8 +40,6 @@ const App = () => {
         "loggedBlogUser",
         JSON.stringify(user)
       );
-
-      blogService.setToken(user.token);
       setUser(user);
 
       showNotification(`welcome ${user.name}`);
@@ -70,7 +58,6 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject);
-      setBlogs(blogs.concat(returnedBlog));
 
       blogFormRef.current.toggleVisibility()
       showNotification(
@@ -119,15 +106,12 @@ const App = () => {
             <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
               <BlogForm createBlog={addBlog} />
             </Togglable>
-            <Blogs blogs={blogs}/>
+            <Blogs />
           </>
         )} />
 
         <Route path="/blogs/:id" element={
-            <Blog
-              blogs={blogs}
-              setBlogs={setBlogs}
-            />
+          <Blog/>
         } />
 
         <Route path="/login" element={

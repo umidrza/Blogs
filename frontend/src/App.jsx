@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import loginService from "./services/login";
 import useResource from './hooks/useResource'
+import { showNotification } from './reducers/notificationReducer';
+import { useDispatch } from 'react-redux';
 
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
@@ -18,11 +20,11 @@ import {
 
 const App = () => {
   const [blogs, blogService] = useResource('/api/blogs');
-  const [notification, setNotification] = useState({ message: "", type: "" });
   const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const loggedUserJSON = localStorage.getItem('loggedBlogUser')
@@ -42,17 +44,17 @@ const App = () => {
       );
       setUser(user);
 
-      showNotification(`welcome ${user.name}`);
+      dispatch(showNotification(`welcome ${user.name}`, 'success', 3));
     } catch {
-      showNotification("wrong username or password", "error");
+      dispatch(showNotification("wrong username or password", "error", 3));
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogUser");
     setUser(null);
-    showNotification(`Logout ${user.name}`);
-    navigate('/login')
+    dispatch(showNotification(`Logout ${user.name}`));
+    navigate('/login');
   };
 
   const addBlog = async (blogObject) => {
@@ -60,26 +62,14 @@ const App = () => {
       const returnedBlog = await blogService.create(blogObject);
 
       blogFormRef.current.toggleVisibility()
-      showNotification(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-      );
       navigate(`blogs/${returnedBlog.id}`)
+      dispatch(showNotification(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      ))
     } catch {
-      showNotification("failed to add blog", "error");
+      dispatch(showNotification("failed to add blog", "error"))
     }
   };
-
-  const showNotification = (message, type = "success") => {
-    setNotification({ message, type });
-
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-  };
-
-  const padding = {
-    padding: 5
-  }
 
   return (
     <div className="container mt-4">
@@ -106,10 +96,7 @@ const App = () => {
       </nav>
 
       {/* Notification */}
-      <Notification
-        message={notification?.message}
-        type={notification?.type}
-      />
+      <Notification />
 
       {/* Routes */}
       <Routes>

@@ -1,14 +1,23 @@
+import { useSelector } from 'react-redux'
 
-const Notification = ({ message, type }) => {
-  if (!message) return null;
+const Notification = () => {
+  const notifications = useSelector(state => state.notifications);
 
-  const alertClass =
-    type === "error" ? "alert alert-danger" : "alert alert-success";
+  if (!notifications.length) return null;
 
   return (
-    <div className={`${alertClass} mt-3`} role="alert">
-      {message}
-    </div>
+    <>
+      {notifications.map((n) => (
+        <div
+          key={n.id}
+          className={`mt-3 alert ${
+            n.type === "error" ? "alert-danger" : "alert-success"
+          }`}
+        >
+          {n.message}
+        </div>
+      ))}
+    </>
   );
 };
 

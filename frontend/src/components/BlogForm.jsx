@@ -1,18 +1,48 @@
-import { useState } from "react"
+import { createBlog } from "../reducers/blogsReducer";
+import { useField } from "../hooks/useField";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { showNotification } from "../reducers/notificationReducer";
 
-const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+const BlogForm = () => {
+  const { reset: resetTitle, ...title } = useField("text");
+  const { reset: resetAuthor, ...author } = useField("text");
+  const { reset: resetUrl, ...url } = useField("text");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    createBlog({ title, author, url });
+    addBlog({
+      title: title.value,
+      author: author.value,
+      url: url.value,
+    });
 
-    setTitle("");
-    setAuthor("");
-    setUrl("");
+    resetInputs();
+  };
+
+  const addBlog = async (blogObject) => {
+    try {
+      const returnedBlog = await dispatch(createBlog(blogObject)).unwrap();
+
+      navigate(`blogs/${returnedBlog.id}`);
+      dispatch(
+        showNotification(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        ),
+      );
+    } catch {
+      dispatch(showNotification("failed to add blog", "error"));
+    }
+  };
+
+  const resetInputs = () => {
+    resetTitle();
+    resetAuthor();
+    resetUrl();
   };
 
   return (
@@ -24,39 +54,21 @@ const BlogForm = ({ createBlog }) => {
           <label htmlFor="title" className="form-label">
             Title
           </label>
-          <input
-            type="text"
-            id="title"
-            className="form-control"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <input id="title" className="form-control" {...title} />
         </div>
 
         <div className="mb-3">
           <label htmlFor="author" className="form-label">
             Author
           </label>
-          <input
-            type="text"
-            id="author"
-            className="form-control"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input id="author" className="form-control" {...author} />
         </div>
 
         <div className="mb-3">
           <label htmlFor="url" className="form-label">
             URL
           </label>
-          <input
-            type="text"
-            id="url"
-            className="form-control"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
+          <input id="url" className="form-control" {...url} />
         </div>
 
         <button type="submit" className="btn btn-success">
@@ -64,7 +76,7 @@ const BlogForm = ({ createBlog }) => {
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default BlogForm
+export default BlogForm;

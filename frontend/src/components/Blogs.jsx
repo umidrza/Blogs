@@ -1,9 +1,17 @@
 import { Link } from "react-router-dom"
-import useResource from "../hooks/useResource"
+import { fetchBlogs } from '../reducers/blogsReducer'
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
 
 const Blogs = () => {
-  const [blogs, blogService] = useResource('/api/blogs')
+  const blogs = useSelector(state => state.blogs)
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+      dispatch(fetchBlogs())
+    }, [dispatch])
   
   return (
     <div className="container mt-4">

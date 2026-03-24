@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
-import loginService from "./services/login";
-import { showNotification } from './reducers/notificationReducer';
-
+import { initializeUser } from './reducers/userReducer';
 
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
@@ -16,47 +14,15 @@ import Navbar from './components/Navbar'
 
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  
   useEffect(() => {
-    const loggedUserJSON = localStorage.getItem('loggedBlogUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-    }
-  }, [])
-
-  const handleLogin = async (credentials) => {
-    try {
-      const user = await loginService.login(credentials);
-
-      window.localStorage.setItem(
-        "loggedBlogUser",
-        JSON.stringify(user)
-      );
-      setUser(user);
-
-      dispatch(showNotification(`welcome ${user.name}`, 'success', 3));
-    } catch {
-      dispatch(showNotification("wrong username or password", "error", 3));
-    }
-  };
-
-  const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogUser");
-    setUser(null);
-    dispatch(showNotification(`Logout ${user.name}`));
-    navigate('/login');
-  };
+    dispatch(initializeUser());
+  }, [dispatch]);
 
   return (
     <div className="container mt-4">
-      <Navbar handleLogout={handleLogout}
-        user={user}/>
+      <Navbar />
 
       <Notification />
 
@@ -77,7 +43,7 @@ const App = () => {
         />
 
         <Route path="/blogs/:id" element={<Blog />} />
-        <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
+        <Route path="/login" element={<LoginForm />} />
       </Routes>
     </div>
   );

@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import Logout from "./LogoutForm";
+import { useSelector } from 'react-redux';
 
-const Navbar = ({ handleLogout, user}) => {
+const Navbar = ({ handleLogout }) => {
+  const user = useSelector((state) => state.user.currentUser);
   
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4 rounded shadow-sm p-3">

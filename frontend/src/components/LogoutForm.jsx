@@ -1,5 +1,20 @@
+import { logoutUser } from '../reducers/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { showNotification } from '../reducers/notificationReducer';
+import { useNavigate } from 'react-router-dom';
 
-const LogoutForm = ({ handleLogout }) => {
+
+const LogoutForm = () => {
+  const user = useSelector((state) => state.user.currentUser);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logoutUser())
+    dispatch(showNotification(`Logout ${user.name}`));
+    navigate('/');
+  };
 
   return (
     <>

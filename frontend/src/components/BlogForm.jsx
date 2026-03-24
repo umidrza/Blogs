@@ -28,7 +28,7 @@ const BlogForm = () => {
     try {
       const returnedBlog = await dispatch(createBlog(blogObject)).unwrap();
 
-      navigate(`blogs/${returnedBlog.id}`);
+      navigate(`/blogs/${returnedBlog.id}`);
       dispatch(
         showNotification(
           `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,

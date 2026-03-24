@@ -1,13 +1,11 @@
-import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "../reducers/notificationReducer";
-import { fetchBlogs, updateBlog, deleteBlog } from '../reducers/blogsReducer'
+import { fetchBlogs, updateBlog, deleteBlog } from "../reducers/blogsReducer";
 import { useEffect } from "react";
 
 const Blog = () => {
   const blogs = useSelector((state) => state.blogs);
-  const [visible, setVisible] = useState(false);
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -19,10 +17,6 @@ const Blog = () => {
 
   const blog = blogs.find((blog) => blog.id === id);
 
-  const toggleVisibility = () => {
-    setVisible(!visible);
-  };
-
   const handleLike = async () => {
     const updatedBlog = {
       ...blog,
@@ -30,7 +24,7 @@ const Blog = () => {
       user: blog.user.id,
     };
 
-    dispatch(updateBlog({id: blog.id, updatedBlog}));
+    dispatch(updateBlog({ id: blog.id, updatedBlog }));
     dispatch(showNotification(`Liked ${blog.title}`, "success", 2));
   };
 
@@ -53,38 +47,33 @@ const Blog = () => {
           <div>
             <strong>{blog.title}</strong> by {blog.author}
           </div>
-          <button className="btn btn-primary btn-sm" onClick={toggleVisibility}>
-            {visible ? "Hide" : "View"}
-          </button>
         </div>
 
-        {visible && (
-          <div className="mt-3">
-            <div className="mb-2">
-              <a href={blog.url} target="_blank" rel="noreferrer">
-                {blog.url}
-              </a>
-            </div>
-
-            <div className="mb-2 d-flex align-items-center gap-2">
-              <span>{blog.likes} likes</span>
-              <button
-                className="btn btn-outline-success btn-sm"
-                onClick={handleLike}
-              >
-                Like
-              </button>
-            </div>
-
-            <div className="mb-2 text-muted">Added by {blog.user.name}</div>
-
-            <div>
-              <button className="btn btn-danger btn-sm" onClick={handleDelete}>
-                Remove
-              </button>
-            </div>
+        <div className="mt-3">
+          <div className="mb-2">
+            <a href={blog.url} target="_blank" rel="noreferrer">
+              {blog.url}
+            </a>
           </div>
-        )}
+
+          <div className="mb-2 d-flex align-items-center gap-2">
+            <span>{blog.likes} likes</span>
+            <button
+              className="btn btn-outline-success btn-sm"
+              onClick={handleLike}
+            >
+              Like
+            </button>
+          </div>
+
+          <div className="mb-2 text-muted">Added by {blog.user.name}</div>
+
+          <div>
+            <button className="btn btn-danger btn-sm" onClick={handleDelete}>
+              Remove
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

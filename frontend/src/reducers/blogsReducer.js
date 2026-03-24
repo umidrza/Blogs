@@ -10,7 +10,14 @@ export const fetchBlogs = createAsyncThunk(
   }
 )
 
-// Create a new blog
+export const fetchById = createAsyncThunk(
+  'blogs/fetchById',
+  async (id) => {
+    const blog = await blogService.getById(id)
+    return blog
+  }
+)
+
 export const createBlog = createAsyncThunk(
   'blogs/create',
   async (newBlog) => {
@@ -19,7 +26,6 @@ export const createBlog = createAsyncThunk(
   }
 )
 
-// Update a blog
 export const updateBlog = createAsyncThunk(
   'blogs/update',
   async ({ id, updatedBlog }) => {
@@ -28,7 +34,6 @@ export const updateBlog = createAsyncThunk(
   }
 )
 
-// Delete a blog
 export const deleteBlog = createAsyncThunk(
   'blogs/delete',
   async (id) => {

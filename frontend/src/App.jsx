@@ -1,17 +1,18 @@
-import { useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
-import { initializeUser } from './reducers/userReducer';
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { initializeUser } from "./reducers/userReducer";
 
-import Blogs from './components/Blogs'
-import Blog from './components/Blog'
-import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable';
-import Home from './components/Home'
-import Navbar from './components/Navbar'
-
+import Blogs from "./components/Blogs";
+import Blog from "./components/Blog";
+import LoginForm from "./components/LoginForm";
+import BlogForm from "./components/BlogForm";
+import Notification from "./components/Notification";
+import Togglable from "./components/Togglable";
+import Home from "./components/Home";
+import Navbar from "./components/Navbar";
+import Users from "./components/Users";
+import User from "./components/User";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -43,10 +44,12 @@ const App = () => {
         />
 
         <Route path="/blogs/:id" element={<Blog />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/users/:id" element={<User />} />
         <Route path="/login" element={<LoginForm />} />
       </Routes>
     </div>
   );
-}
+};
 
-export default App
+export default App;

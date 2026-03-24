@@ -68,7 +68,23 @@ const Blog = () => {
 
           <div className="mb-2 text-muted">Added by {blog.user.name}</div>
 
-          <div>
+          <div className="mt-3">
+            <h6>Comments</h6>
+
+            {blog.comments && blog.comments.length > 0 ? (
+              <ul className="list-group">
+                {blog.comments.map(comment => (
+                  <li key={comment.id} className="list-group-item">
+                    {comment.content}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-muted">No comments yet</div>
+            )}
+          </div>
+
+          <div className="mt-3">
             <button className="btn btn-danger btn-sm" onClick={handleDelete}>
               Remove
             </button>

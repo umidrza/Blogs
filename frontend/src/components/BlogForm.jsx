@@ -1,48 +1,28 @@
-import { createBlog } from "../reducers/blogsReducer";
+import { addBlog } from "../reducers/blogs";
 import { useField } from "../hooks/useField";
+import { useNotification } from "../hooks/useNotification";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { showNotification } from "../reducers/notificationReducer";
 
-const BlogForm = () => {
-  const { reset: resetTitle, ...title } = useField("text");
-  const { reset: resetAuthor, ...author } = useField("text");
-  const { reset: resetUrl, ...url } = useField("text");
+const BlogForm = ({ hideMe }) => {
+  const title = useField("text");
+  const author = useField("text");
+  const url = useField("text");
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const notify = useNotification();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    addBlog({
-      title: title.value,
-      author: author.value,
-      url: url.value,
-    });
-
-    resetInputs();
-  };
-
-  const addBlog = async (blogObject) => {
-    try {
-      const returnedBlog = await dispatch(createBlog(blogObject)).unwrap();
-
-      navigate(`/blogs/${returnedBlog.id}`);
-      dispatch(
-        showNotification(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-        ),
-      );
-    } catch {
-      dispatch(showNotification("failed to add blog", "error"));
-    }
-  };
-
-  const resetInputs = () => {
-    resetTitle();
-    resetAuthor();
-    resetUrl();
+    notify(`A new blog '${title.value}' by '${author.value}' added`);
+    dispatch(
+      addBlog({
+        title: title.value,
+        author: author.value,
+        url: url.value,
+      }),
+    );
+    hideMe();
   };
 
   return (

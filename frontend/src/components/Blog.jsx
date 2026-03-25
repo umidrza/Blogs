@@ -1,43 +1,39 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { showNotification } from "../reducers/notificationReducer";
-import { fetchBlogs, updateBlog, deleteBlog } from "../reducers/blogsReducer";
-import { useEffect } from "react";
+import { updateBlog, removeBlog, commentBlog } from "../reducers/blogs";
+import { useNotification } from "../hooks/useNotification";
 
 const Blog = () => {
-  const blogs = useSelector((state) => state.blogs);
-  const { id } = useParams();
+  const id = useParams().id;
+  const blog = useSelector(({ blogs }) => blogs.find((u) => u.id === id));
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const notifyWith = useNotification();
 
-  useEffect(() => {
-    dispatch(fetchBlogs());
-  }, [dispatch]);
+  const remove = () => {
+    const ok = window.confirm(`Sure you want to remove '${blog.title}'`);
 
-  const blog = blogs.find((blog) => blog.id === id);
-
-  const handleLike = async () => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id,
-    };
-
-    dispatch(updateBlog({ id: blog.id, updatedBlog }));
-    dispatch(showNotification(`Liked ${blog.title}`, "success", 2));
+    if (ok) {
+      dispatch(removeBlog(blog));
+      notifyWith(`The blog '${blog.title}' deleted`);
+      navigate("/blogs");
+    }
   };
 
-  const handleDelete = async () => {
-    if (!confirm(`Remove blog ${blog.title} by ${blog.author}`)) return;
+  const like = () => {
+    const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id };
+    dispatch(updateBlog(blog.id, blogToUpdate));
+    notifyWith(`A like for the blog '${blog.title}' by '${blog.author}'`);
+  };
 
-    dispatch(deleteBlog(blog.id));
-    navigate("/blogs");
-    dispatch(showNotification(`Deleted ${blog.title}`, "success", 2));
+  const addComment = () => {
+    dispatch(commentBlog(blog.id, comment));
+    notifyWith("Comment added!");
   };
 
   if (!blog) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (
@@ -60,7 +56,7 @@ const Blog = () => {
             <span>{blog.likes} likes</span>
             <button
               className="btn btn-outline-success btn-sm"
-              onClick={handleLike}
+              onClick={like}
             >
               Like
             </button>
@@ -73,7 +69,7 @@ const Blog = () => {
 
             {blog.comments && blog.comments.length > 0 ? (
               <ul className="list-group">
-                {blog.comments.map(comment => (
+                {blog.comments.map((comment) => (
                   <li key={comment.id} className="list-group-item">
                     {comment.content}
                   </li>
@@ -85,7 +81,7 @@ const Blog = () => {
           </div>
 
           <div className="mt-3">
-            <button className="btn btn-danger btn-sm" onClick={handleDelete}>
+            <button className="btn btn-danger btn-sm" onClick={remove}>
               Remove
             </button>
           </div>

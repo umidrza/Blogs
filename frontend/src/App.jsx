@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { initializeUser } from "./reducers/userReducer";
+import { useInitialization } from "./hooks/useInitialization";
 
 import Blogs from "./components/Blogs";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
+import LogoutForm from "./components/LogoutForm";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
@@ -15,11 +15,13 @@ import Users from "./components/Users";
 import User from "./components/User";
 
 const App = () => {
-  const dispatch = useDispatch();
+  const stateInitializer = useInitialization();
 
   useEffect(() => {
-    dispatch(initializeUser());
-  }, [dispatch]);
+    stateInitializer();
+  }, []);
+
+  const blogFormRef = useRef();
 
   return (
     <div className="container mt-4">
@@ -34,8 +36,10 @@ const App = () => {
           path="/blogs"
           element={
             <>
-              <Togglable buttonLabel="Create new Blog">
-                <BlogForm />
+              <Togglable buttonLabel="Create new Blog" ref={blogFormRef}>
+                <BlogForm
+                  hideMe={() => blogFormRef.current.toggleVisibility()}
+                />
               </Togglable>
 
               <Blogs />
@@ -47,6 +51,7 @@ const App = () => {
         <Route path="/users" element={<Users />} />
         <Route path="/users/:id" element={<User />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/logout" element={<LogoutForm />} />
       </Routes>
     </div>
   );

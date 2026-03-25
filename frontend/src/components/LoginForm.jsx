@@ -1,33 +1,31 @@
 import { useField } from "../hooks/useField";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../reducers/userReducer";
-import { showNotification } from "../reducers/notificationReducer";
+import { loginUser } from "../reducers/user";
+import { useNotification } from "../hooks/useNotification";
 
 const LoginForm = () => {
-  const { reset: resetUsername, ...username } = useField("text");
-  const { reset: resetPassword, ...password } = useField("password");
+  const username = useField("text");
+  const password = useField("password");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const notify = useNotification();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    const result = await dispatch(
-      loginUser({
-        username: username.value,
-        password: password.value,
-      }),
-    );
-
-    if (loginUser.fulfilled.match(result)) {
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
       dispatch(
-        showNotification(`Welcome ${result.payload.name}`, "success", 3),
+        loginUser({
+          username: username.value,
+          password: password.value,
+        }),
       );
+
+      notify(`Welcome ${username.value}`, "success", 3);
       navigate("/");
-    } else {
-      dispatch(showNotification("Wrong credentials", "error", 3));
+    } catch (e) {
+      notify("wrong username or password", "error");
     }
   };
 

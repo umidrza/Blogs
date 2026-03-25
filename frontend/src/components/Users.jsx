@@ -1,16 +1,8 @@
 import { Link } from "react-router-dom";
-import { fetchUsers } from "../reducers/usersReducer";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Users = () => {
-  const users = useSelector((state) => state.users);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+  const users = useSelector(({ users }) => users);
 
   return (
     <div className="container mt-4">

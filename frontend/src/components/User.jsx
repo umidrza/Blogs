@@ -1,22 +1,12 @@
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../reducers/usersReducer";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const User = () => {
-  const users = useSelector((state) => state.users);
   const { id } = useParams();
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
-
-  const user = users.find((user) => user.id === id);
+  const user = useSelector(({ users }) => users.find((u) => u.id === id));
 
   if (!user) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (

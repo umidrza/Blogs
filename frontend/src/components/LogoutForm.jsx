@@ -1,31 +1,24 @@
-import { logoutUser } from '../reducers/userReducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { showNotification } from '../reducers/notificationReducer';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useClearUser } from "../hooks/useClearUser";
+import { useNotification } from "../hooks/useNotification";
 
 const LogoutForm = () => {
-  const user = useSelector((state) => state.user.currentUser);
-
-  const dispatch = useDispatch();
+  const clearUser = useClearUser();
+  const notifyWith = useNotification();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    dispatch(logoutUser())
-    dispatch(showNotification(`Logout ${user.name}`));
-    navigate('/');
+  
+  const logout = async () => {
+    clearUser();
+    notifyWith("Logged out");
+    navigate("/");
   };
 
-  return (
-    <>
-      <button
-        className="btn btn-outline-danger btn-sm"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
-    </>
-  )
-}
+  useEffect(() => {
+    logout();
+  }, []);
 
-export default LogoutForm
+  return null;
+};
+
+export default LogoutForm;

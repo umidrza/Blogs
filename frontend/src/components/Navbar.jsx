@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import Logout from "./LogoutForm";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 
-const Navbar = ({ handleLogout }) => {
-  const user = useSelector((state) => state.user.currentUser);
-  
+const Navbar = () => {
+  const user = useSelector(({ user }) => user);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4 rounded shadow-sm p-3">
       <div className="container-fluid d-flex justify-content-between">
@@ -24,7 +23,12 @@ const Navbar = ({ handleLogout }) => {
           {user ? (
             <span className="navbar-text">
               <em>
-                {user.name} <Logout handleLogout={handleLogout} />
+                {user.name}
+                <Link to="/logout">
+                  <button className="btn btn-outline-danger btn-sm">
+                    Logout
+                  </button>
+                </Link>
               </em>
             </span>
           ) : (

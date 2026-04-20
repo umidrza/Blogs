@@ -80,5 +80,4 @@ npm run lint
 - Implement lazy loading for components to improve performance.
 - Add accessibility features (ARIA labels, keyboard navigation).
 - Add more unit tests for components and hooks.
-- Consider using React Query for better data fetching and caching.</content>
-<parameter name="filePath">c:\Users\umidr\full-stack-open\Blogs\frontend\README.md
+- Consider using React Query for better data fetching and caching.

@@ -97,5 +97,4 @@ npm run lint
 - Add more comprehensive error handling and logging.
 - Implement pagination for blogs and users endpoints.
 - Add unit tests for individual functions and middleware.
-- Use MongoDB Memory Server for testing to avoid needing a separate test database.</content>
-<parameter name="filePath">c:\Users\umidr\full-stack-open\Blogs\backend\README.md
+- Use MongoDB Memory Server for testing to avoid needing a separate test database.

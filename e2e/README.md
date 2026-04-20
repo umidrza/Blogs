@@ -62,5 +62,4 @@ Tests are configured in `playwright.config.js`:
 - Integrate with CI/CD pipeline for automated testing.
 - Add performance testing to monitor page load times.
 - Ensure tests are isolated and don't depend on external state.
-- Add API mocking for faster and more reliable tests.</content>
-<parameter name="filePath">c:\Users\umidr\full-stack-open\Blogs\e2e\README.md
+- Add API mocking for faster and more reliable tests.

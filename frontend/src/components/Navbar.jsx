@@ -21,20 +21,23 @@ const Navbar = () => {
 
         <div>
           {user ? (
-            <span className="navbar-text">
-              <em>
-                {user.name}
-                <Link to="/logout">
-                  <button className="btn btn-outline-danger btn-sm">
-                    Logout
-                  </button>
-                </Link>
-              </em>
+            <span className="navbar-text d-flex align-items-center gap-2">
+              <em>{user.name}</em>
+              <Link to="/logout">
+                <button className="btn btn-outline-danger btn-sm">
+                  Logout
+                </button>
+              </Link>
             </span>
           ) : (
-            <Link className="nav-link" to="/login">
-              Login
-            </Link>
+            <div className="d-flex gap-2">
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
+              <Link className="nav-link" to="/register">
+                Register
+              </Link>
+            </div>
           )}
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useClearUser } from "../hooks/useClearUser";
-import { useNotification } from "../hooks/useNotification";
+import { useClearUser } from "../../hooks/useClearUser";
+import { useNotification } from "../../hooks/useNotification";
 
 const LogoutForm = () => {
   const clearUser = useClearUser();

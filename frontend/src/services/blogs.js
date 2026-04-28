@@ -11,34 +11,58 @@ const config = () => ({
 });
 
 const getAll = async () => {
-  const response = await axios.get(baseUrl);
-  return response.data;
+  try {
+    const response = await axios.get(baseUrl);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to fetch blogs' }
+  }
 };
 
 const getById = async (id) => {
-  const response = await axios.get(`${baseUrl}/${id}`);
-  return response.data;
+  try {
+    const response = await axios.get(`${baseUrl}/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to fetch blog' }
+  }
 };
 
 const create = async (newBlog) => {
-  const response = await axios.post(baseUrl, newBlog, config());
-  return response.data;
+  try {
+    const response = await axios.post(baseUrl, newBlog, config());
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to create blog' }
+  }
 };
 
 const update = async (id, updatedBlog) => {
-  const response = await axios.put(`${baseUrl}/${id}`, updatedBlog, config());
-  return response.data;
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, updatedBlog, config());
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to update blog' }
+  }
 };
 
 
 const remove = async (id) => {
-  const response = await axios.delete(`${baseUrl}/${id}`, config());
-  return response.data;
+  try {
+    const response = await axios.delete(`${baseUrl}/${id}`, config());
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to delete blog' }
+  }
 };
 
 const comment = async (id, comment) => {
-  const request = await axios.post(`${baseUrl}/${id}/comments`, { comment }, config())
-  return request.data
+  try {
+    const request = await axios.post(`${baseUrl}/${id}/comments`, { comment }, config())
+    return request.data
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to add comment' }
+  }
 }
 
 export default { getAll, getById, create, update, remove, comment };

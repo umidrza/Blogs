@@ -2,17 +2,18 @@ import { useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useInitialization } from "./hooks/useInitialization";
 
-import Blogs from "./components/Blogs";
-import Blog from "./components/Blog";
-import LoginForm from "./components/LoginForm";
-import LogoutForm from "./components/LogoutForm";
-import BlogForm from "./components/BlogForm";
+import Blogs from "./components/Blogs/Blogs";
+import Blog from "./components/Blogs/Blog";
+import LoginForm from "./components/Auth/LoginForm";
+import LogoutForm from "./components/Auth/LogoutForm";
+import RegisterForm from "./components/Auth/RegisterForm";
+import BlogForm from "./components/Blogs/BlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
-import Users from "./components/Users";
-import User from "./components/User";
+import Users from "./components/Users/Users";
+import User from "./components/Users/User";
 
 const App = () => {
   const stateInitializer = useInitialization();
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="/users" element={<Users />} />
         <Route path="/users/:id" element={<User />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
         <Route path="/logout" element={<LogoutForm />} />
       </Routes>
     </div>

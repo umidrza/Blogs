@@ -13,13 +13,17 @@ jobs:
     services:
       mongodb:
         image: mongo:latest
+        ports:
+          - 27017:27017
         options: >-
           --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 27017:27017
+
+    env:
+      TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+      PORT: 3003
 
     steps:
       - uses: actions/checkout@v4
@@ -42,9 +46,6 @@ jobs:
       - name: Run backend tests
         working-directory: ./backend
         run: npm test
-        env:
-          MONGODB_URI: mongodb://localhost:27017/blogs-test
-          PORT: 3003
 
   frontend-tests:
     runs-on: ubuntu-latest
@@ -82,13 +83,16 @@ jobs:
     services:
       mongodb:
         image: mongo:latest
+        ports:
+          - 27017:27017
         options: >-
           --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 27017:27017
+
+    env:
+      TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
 
     steps:
       - uses: actions/checkout@v4
@@ -127,7 +131,7 @@ jobs:
         working-directory: ./backend
         run: npm start &
         env:
-          MONGODB_URI: mongodb://localhost:27017/blogs-test
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           NODE_ENV: production
 
       - name: Wait for backend server
@@ -137,7 +141,7 @@ jobs:
         working-directory: ./e2e
         run: npm test
         env:
-          MONGODB_URI: mongodb://localhost:27017/blogs-test
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4

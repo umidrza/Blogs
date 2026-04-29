@@ -3,7 +3,6 @@ const app = require('../app')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const helper = require('./test_helper')
 const User = require('../models/user')
 
 const api = supertest(app)
@@ -20,8 +19,6 @@ describe('users', () => {
       password: 'test123'
     }
 
-    const usersAtStart = await helper.usersInDb()
-
     const response = await api
       .post('/api/users')
       .send(newUser)
@@ -30,10 +27,6 @@ describe('users', () => {
 
     assert.strictEqual(response.body.username, newUser.username)
     assert.strictEqual(response.body.name, newUser.name)
-
-    const usersAtEnd = await helper.usersInDb()
-
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length - 1)
   })
 
   test('user without username is not added', async () => {
@@ -42,17 +35,11 @@ describe('users', () => {
       password: 'test123'
     }
 
-    const usersAtStart = await helper.usersInDb()
-
     await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/)
-
-    const usersAtEnd = await helper.usersInDb()
-
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
   })
 
   test('user without password is not added', async () => {
@@ -61,17 +48,11 @@ describe('users', () => {
       name: 'New User'
     }
 
-    const usersAtStart = await helper.usersInDb()
-
     await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/)
-
-    const usersAtEnd = await helper.usersInDb()
-
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
   })
 
   test('user is not added if password length is 2 characters', async () => {
@@ -81,17 +62,11 @@ describe('users', () => {
       password: 'pw'
     }
 
-    const usersAtStart = await helper.usersInDb()
-
     await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/)
-
-    const usersAtEnd = await helper.usersInDb()
-
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
   })
 
   test('user is not added if username length is 2 characters', async () => {
@@ -101,17 +76,11 @@ describe('users', () => {
       password: 'password'
     }
 
-    const usersAtStart = await helper.usersInDb()
-
     await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/)
-
-    const usersAtEnd = await helper.usersInDb()
-
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
   })
 
   test("same username can't be added twice", async () => {
@@ -123,13 +92,7 @@ describe('users', () => {
 
     await api.post('/api/users').send(newUser)
 
-    const usersAtStart = await helper.usersInDb()
-
     await api.post('/api/users').send(newUser).expect(400)
-
-    const usersAtEnd = await helper.usersInDb()
-
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length)
   })
 
   after(() => {

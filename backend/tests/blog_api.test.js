@@ -1,4 +1,4 @@
-const { test, describe, after, beforeEach, before } = require('node:test')
+const { test, describe, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -16,29 +16,30 @@ const testUser = {
 }
 
 let token
-let userId
 
 describe('when there are initially some blogs saved', () => {
-  before(async () => {
-    await User.deleteMany({})
-    let response = await api.post('/api/users').send(testUser)
-    userId = response.body.id
-
-    response = await api.post('/api/login').send(testUser)
-    token = response.body.token
-  })
-
   beforeEach(async () => {
     await Blog.deleteMany({})
-    await Blog.insertMany(
-      helper.initialBlogs.map(blog => ({ ...blog, user: userId }))
+    await User.deleteMany({})
+
+    const res = await api.post('/api/users').send(testUser)
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username: testUser.username, password: testUser.password })
+
+    token = loginResponse.body.token
+
+    const blogObjects = helper.initialBlogs.map(
+      blog => new Blog({ ...blog, user: res.body.id })
     )
+
+    await Blog.insertMany(blogObjects)
   })
 
   test('right amount of blogs are returned', async () => {
     const result = await api
       .get('/api/blogs')
-      .set({ Authorization: `Bearer ${token}` })
 
     assert.strictEqual(result.body.length, helper.initialBlogs.length)
   })

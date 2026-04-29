@@ -18,10 +18,6 @@ const blogSchema = new mongoose.Schema({
   url: {
     type: String,
     required: [true, "URL is required"],
-    match: [
-      /^(https?:\/\/)?([\w-])+\.{1}([a-zA-Z]{2,63})([\w\-._~:/?#[\]@!$&'()*+,;=.]+)?$/,
-      "Please use a valid URL",
-    ],
   },
   likes: {
     type: Number,

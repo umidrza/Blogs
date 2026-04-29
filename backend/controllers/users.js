@@ -26,6 +26,18 @@ usersRouter.get("/:id", async (request, response) => {
 usersRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body;
 
+  if (!username || !password) {
+    return response.status(400).json({
+      error: 'username and password are required'
+    })
+  }
+
+  if (password.length < 3) {
+    return response.status(400).json({
+      error: 'password must be at least 3 characters long'
+    })
+  }
+
   if (password.length < 6) {
     return response
       .status(400)

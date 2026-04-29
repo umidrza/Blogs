@@ -23,6 +23,7 @@ jobs:
 
     env:
       TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       PORT: 3003
 
     steps:
@@ -132,6 +133,8 @@ jobs:
         run: npm start &
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PORT: 3003
           NODE_ENV: production
 
       - name: Wait for backend server

@@ -20,6 +20,7 @@ const App = () => {
 
   useEffect(() => {
     stateInitializer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const blogFormRef = useRef();

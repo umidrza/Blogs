@@ -25,7 +25,7 @@ export const useInitialization = () => {
 
     try {
       await dispatch(initUser())
-    } catch (error) {
+    } catch {
       // Silent fail for user initialization
     }
   }

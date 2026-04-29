@@ -7,7 +7,7 @@ const LogoutForm = () => {
   const clearUser = useClearUser();
   const notifyWith = useNotification();
   const navigate = useNavigate();
-  
+
   const logout = async () => {
     clearUser();
     notifyWith("Logged out");
@@ -16,6 +16,7 @@ const LogoutForm = () => {
 
   useEffect(() => {
     logout();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;

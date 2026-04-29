@@ -33,10 +33,6 @@ jobs:
         working-directory: ./backend
         run: docker build -t blogs-backend -f Dockerfile .
 
-      - name: Build frontend image
-        working-directory: ./frontend
-        run: docker build -t blogs-front -f Dockerfile .
-
       - name: Start app with Docker Compose
         run: docker compose up -d
 
@@ -88,8 +84,6 @@ jobs:
         run: |
           echo "=== Backend logs ==="
           docker compose logs backend
-          echo "=== Frontend logs ==="
-          docker compose logs app
           echo "=== Nginx logs ==="
           docker compose logs nginx
 

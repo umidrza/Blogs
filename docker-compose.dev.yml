@@ -1,0 +1,52 @@
+services:
+  app:
+    image: blogs-front-dev
+    build:
+      context: ./frontend 
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: blogs-front-dev
+
+  server:
+    image: blogs-back-dev
+    build:
+      context: ./backend 
+      dockerfile: dev.Dockerfile
+    environment:
+      MONGO_URL: mongodb://root:example@mongo:27017/the_database?authSource=admin
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend:/usr/src/app 
+      - /usr/src/app/node_modules
+    container_name: blogs-back-dev
+
+  nginx:
+    image: nginx:1.29
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy-dev
+    depends_on:
+      - app
+      - server
+  
+  mongo:
+    image: mongo
+    ports:
+      - 3456:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: the_database
+    volumes:
+      - mongo_data:/data/db
+  
+  debug-helper:
+    image: busybox
+
+volumes:
+  mongo_data:

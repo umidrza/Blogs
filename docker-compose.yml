@@ -1,14 +1,4 @@
 services:
-  app:
-    image: blogs-front
-    build:
-      context: ./frontend 
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules
-    container_name: blogs-front
-
   backend:
     image: blogs-backend
     build:
@@ -25,14 +15,14 @@ services:
 
   nginx:
     image: nginx:1.29
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: reverse-proxy
     ports:
       - 8080:80
-    container_name: reverse-proxy
     depends_on:
-      - app
       - backend
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
   
   mongo:
     image: mongo

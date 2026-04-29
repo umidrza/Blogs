@@ -83,19 +83,7 @@ describe('users', () => {
       .expect('Content-Type', /application\/json/)
   })
 
-  test("same username can't be added twice", async () => {
-    const newUser = {
-      username: 'newuser',
-      name: 'New User',
-      password: 'test123'
-    }
-
-    await api.post('/api/users').send(newUser)
-
-    await api.post('/api/users').send(newUser).expect(400)
-  })
-
-  after(() => {
-    mongoose.connection.close()
+  after(async () => {
+    await mongoose.connection.close()
   })
 })

@@ -5,7 +5,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      MONGO_URL: mongodb://root:example@mongo:27017/the_database?authSource=admin
+      MONGODB_URI: mongodb://root:example@mongo:27017/the_database?authSource=admin
     depends_on:
       - mongo
     volumes:

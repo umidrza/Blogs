@@ -17,13 +17,15 @@ services:
 
   nginx:
     image: nginx:1.29
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: reverse-proxy
     ports:
       - 8080:80
     depends_on:
       - backend
     volumes:
-      - ./frontend/dist:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
   
   mongo:

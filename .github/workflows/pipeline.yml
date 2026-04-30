@@ -29,22 +29,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Build frontend
-        working-directory: ./frontend
-        run: |
-          npm ci
-          npm run build
-
-      - name: Build backend image
-        working-directory: ./backend
-        run: docker build -t blogs-backend -f Dockerfile .
-
       - name: Start app with Docker Compose
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
-        run: docker compose up -d
+        run: docker compose up --build -d
 
       - name: Wait for services to be ready
         run: |

@@ -40,11 +40,11 @@ jobs:
         run: docker build -t blogs-backend -f Dockerfile .
 
       - name: Start app with Docker Compose
-        run: |
-          JWT_SECRET=${{ secrets.JWT_SECRET }} \
-          MONGODB_URI=${{ secrets.MONGODB_URI }} \
-          TEST_MONGODB_URI=${{ secrets.TEST_MONGODB_URI }} \
-          docker compose up -d
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+        run: docker compose up -d
 
       - name: Wait for services to be ready
         run: |

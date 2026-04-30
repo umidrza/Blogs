@@ -29,6 +29,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Build frontend
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+
       - name: Build backend image
         working-directory: ./backend
         run: docker build -t blogs-backend -f Dockerfile .

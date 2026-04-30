@@ -8,4 +8,12 @@ const MONGODB_URI = process.env.NODE_ENV === 'test'
 
 const JWT_SECRET = process.env.JWT_SECRET
 
+if (!MONGODB_URI) {
+  throw new Error('Missing required environment variable: MONGODB_URI or TEST_MONGODB_URI')
+}
+
+if (!JWT_SECRET) {
+  throw new Error('Missing required environment variable: JWT_SECRET')
+}
+
 module.exports = { MONGODB_URI, PORT, JWT_SECRET }

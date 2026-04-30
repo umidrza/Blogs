@@ -5,7 +5,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      MONGODB_URI: mongodb://root:example@mongo:27017/the_database?authSource=admin
+      JWT_SECRET: ${JWT_SECRET}
+      MONGODB_URI: ${MONGODB_URI}
+      TEST_MONGODB_URI: ${TEST_MONGODB_URI}
     depends_on:
       - mongo
     volumes:

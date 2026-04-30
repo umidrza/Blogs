@@ -40,7 +40,7 @@ This is the backend API for the Blogs application, built with Node.js, Express, 
    ```
    MONGODB_URI=your_mongodb_connection_string
    TEST_MONGODB_URI=your_test_mongodb_connection_string
-   SECRET=your_jwt_secret
+   JWT_SECRET=your_jwt_secret
    PORT=3003
    ```
 
